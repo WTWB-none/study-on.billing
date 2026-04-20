@@ -18,7 +18,7 @@ services:
       - "5432"
     image: postgres:alpine
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/18/docker
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pguser
