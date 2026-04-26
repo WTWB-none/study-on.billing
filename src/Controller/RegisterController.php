@@ -31,7 +31,7 @@ final class RegisterController
 
     #[OA\Post(
         path: '/api/v1/register',
-        tags: ['Auth'],
+        tags: ['Register'],
         summary: 'Register user',
         requestBody: new OA\RequestBody(
             required: true,
