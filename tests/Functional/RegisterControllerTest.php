@@ -2,8 +2,10 @@
 
 namespace App\Tests\Functional;
 
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Repository\TransactionRepository;
 
 final class RegisterControllerTest extends ApiTestCase
 {
@@ -22,6 +24,7 @@ final class RegisterControllerTest extends ApiTestCase
         $payload = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertArrayHasKey('token', $payload);
+        self::assertArrayHasKey('refresh_token', $payload);
         self::assertSame(['ROLE_USER'], $payload['roles']);
 
         /** @var UserRepository $userRepository */
@@ -30,7 +33,15 @@ final class RegisterControllerTest extends ApiTestCase
 
         self::assertInstanceOf(User::class, $user);
         self::assertSame(['ROLE_USER'], $user->getRoles());
-        self::assertSame(0.0, $user->getBalance());
+        self::assertSame(5000.0, $user->getBalance());
+
+        /** @var TransactionRepository $transactionRepository */
+        $transactionRepository = static::getContainer()->get(TransactionRepository::class);
+        $transactions = $transactionRepository->findBy(['user' => $user], ['id' => 'ASC']);
+
+        self::assertCount(1, $transactions);
+        self::assertSame(Transaction::TYPE_DEPOSIT, $transactions[0]->getType());
+        self::assertSame(5000.0, $transactions[0]->getValue());
     }
 
     public function testRegisterFailsWithInvalidPayload(): void

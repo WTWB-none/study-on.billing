@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Dto\RegisterUserDto;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\PaymentService;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\Exception\RuntimeException as SerializerRuntimeException;
@@ -26,6 +27,8 @@ final class RegisterController
         private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuthenticationSuccessHandler $authenticationSuccessHandler,
+        private readonly PaymentService $paymentService,
+        private readonly float $initialBalance,
     ) {
     }
 
@@ -51,6 +54,7 @@ final class RegisterController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'token', type: 'string'),
+                        new OA\Property(property: 'refresh_token', type: 'string'),
                         new OA\Property(property: 'roles', type: 'array', items: new OA\Items(type: 'string'), example: ['ROLE_USER']),
                     ],
                     type: 'object'
@@ -103,14 +107,13 @@ final class RegisterController
 
         $user = (new User())
             ->setEmail($dto->email)
-            ->setRoles(['ROLE_USER'])
-            ->setBalance(0.0);
+            ->setRoles(['ROLE_USER']);
 
         $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
 
         try {
             $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            $this->paymentService->deposit($user, $this->initialBalance);
         } catch (UniqueConstraintViolationException) {
             return $this->jsonResponse([
                 'message' => 'User with this email already exists.',

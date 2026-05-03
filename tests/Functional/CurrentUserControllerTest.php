@@ -32,6 +32,6 @@ final class CurrentUserControllerTest extends ApiTestCase
 
         self::assertSame('user@example.com', $payload['username']);
         self::assertSame(['ROLE_USER'], $payload['roles']);
-        self::assertSame(0, $payload['balance']);
+        self::assertSame(5000, $payload['balance']);
     }
 }

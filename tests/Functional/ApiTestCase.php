@@ -40,6 +40,18 @@ abstract class ApiTestCase extends WebTestCase
         );
     }
 
+    protected function authenticate(string $username = 'user@example.com', string $password = 'user123'): string
+    {
+        $this->postJson('/api/v1/auth', [
+            'username' => $username,
+            'password' => $password,
+        ]);
+
+        $payload = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        return $payload['token'];
+    }
+
     private function initializeDatabase(EntityManagerInterface $entityManager): void
     {
         $this->ensureDatabaseExists($entityManager);
@@ -100,6 +112,9 @@ abstract class ApiTestCase extends WebTestCase
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
 
+        $connection->executeStatement('DELETE FROM '.$platform->quoteIdentifier('billing_transaction'));
+        $connection->executeStatement('DELETE FROM '.$platform->quoteIdentifier('billing_course'));
+        $connection->executeStatement('DELETE FROM '.$platform->quoteIdentifier('refresh_tokens'));
         $connection->executeStatement('DELETE FROM '.$platform->quoteIdentifier('billing_user'));
         $fixtures->load($entityManager);
         $entityManager->clear();
