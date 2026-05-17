@@ -23,9 +23,6 @@ jobs:
         run: |
           cat << EOF > .env.local
           DATABASE_URL="postgresql://pguser:pguser@postgres:5432/study_on?serverVersion=16&charset=utf8"
-          JWT_SECRET_KEY="%kernel.project_dir%/config/jwt/private.pem"
-          JWT_PUBLIC_KEY="%kernel.project_dir%/config/jwt/public.pem"
-          JWT_PASSPHRASE="1234"
           EOF
           composer install --no-interaction --prefer-dist
 
@@ -36,10 +33,6 @@ jobs:
           docker compose up -d
           docker ps -a
 
-      - name: Generate JWT keypair
-        run: |
-          php bin/console lexik:jwt:generate-keypair
-
       - name: Prepare test database
         run: |
           echo 'DATABASE_URL="postgresql://pguser:pguser@postgres:5432/study_on?serverVersion=16&charset=utf8"' > .env.test.local
@@ -49,4 +42,4 @@ jobs:
           docker compose exec -T php bin/console doctrine:fixtures:load -n --env=test
 
       - name: Run PHPUnit
-        run: docker compose exec -T php bin/phpunit
+        run: docker compose exec -T php bin/phpunit --do-not-cache-result
