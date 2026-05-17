@@ -32,6 +32,7 @@ jobs:
           docker compose build
           docker compose up -d
           docker ps -a
+          docker compose exec -T postgres sh -c 'until pg_isready -h 127.0.0.1 -p 5432 -U pguser; do sleep 1; done'
 
       - name: Prepare test database
         run: |
