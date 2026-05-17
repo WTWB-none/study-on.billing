@@ -6,10 +6,12 @@ use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 #[ORM\Table(name: 'billing_course')]
 #[ORM\UniqueConstraint(name: 'UNIQ_BILLING_COURSE_CODE', fields: ['code'])]
+#[UniqueEntity(fields: ['code'], message: 'Course with this code already exists.')]
 class Course
 {
     public const TYPE_FREE = 0;
@@ -23,6 +25,9 @@ class Course
 
     #[ORM\Column(length: 255)]
     private ?string $code = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
 
     #[ORM\Column(type: 'smallint')]
     private ?int $type = null;
@@ -54,6 +59,18 @@ class Course
     public function setCode(string $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }
@@ -116,6 +133,16 @@ class Course
             self::TYPE_RENT => 'rent',
             self::TYPE_BUY => 'buy',
             default => throw new \LogicException(sprintf('Unsupported course type "%s".', (string) $this->type)),
+        };
+    }
+
+    public static function typeFromName(string $typeName): int
+    {
+        return match ($typeName) {
+            'free' => self::TYPE_FREE,
+            'rent' => self::TYPE_RENT,
+            'buy' => self::TYPE_BUY,
+            default => throw new \LogicException(sprintf('Unsupported course type name "%s".', $typeName)),
         };
     }
 }

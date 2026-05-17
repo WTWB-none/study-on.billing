@@ -1,0 +1,56 @@
+<html lang="ru">
+<head>
+    <title>StudyOn Billing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body style="margin: 0; padding: 0; background: #f2f2f2;">
+<center>
+    <table cellspacing="0" cellpadding="0" style="padding: 20px; background: #f2f2f2; width: 100%; max-width: 880px;">
+        <tr>
+            <td>
+                <table cellspacing="0" cellpadding="0" width="100%" style="background: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 24px 28px 12px; font: bold 24px/32px Arial, sans-serif; color: #1a1a1a;">
+                            StudyOn Billing
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 28px 8px; font: bold 20px/28px Arial, sans-serif; color: #1a1a1a;">
+                            {{ heading }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 28px 24px; font: 15px/22px Arial, sans-serif; color: #1a1a1a;">
+                            {% if isReport|default(false) %}
+                                <table cellspacing="0" cellpadding="8" width="100%" style="border-collapse: collapse; border: 1px solid #d9d9d9;">
+                                    <tr style="background: #f7f7f7;">
+                                        <td style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">Название курса</td>
+                                        <td style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">Тип курса</td>
+                                        <td style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">Число аренд/покупок</td>
+                                        <td style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">Общая сумма</td>
+                                    </tr>
+                                    {% for row in reportRows %}
+                                        <tr>
+                                            <td style="border: 1px solid #d9d9d9;">{{ row.title }}</td>
+                                            <td style="border: 1px solid #d9d9d9;">{{ row.type }}</td>
+                                            <td style="border: 1px solid #d9d9d9;">{{ row.paymentsCount }}</td>
+                                            <td style="border: 1px solid #d9d9d9;">{{ row.totalAmount }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="3" style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">Итого</td>
+                                        <td style="font: bold 14px/20px Arial, sans-serif; border: 1px solid #d9d9d9;">{{ grandTotal }}</td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                {{ message|raw }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>

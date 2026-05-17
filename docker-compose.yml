@@ -34,3 +34,9 @@ services:
       - COMPOSER_ALLOW_SUPERUSER=1
     links:
       - postgres
+  mailhog:
+    image: axllent/mailpit
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"

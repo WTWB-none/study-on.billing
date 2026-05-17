@@ -61,21 +61,25 @@ class AppFixtures extends Fixture
 
         $rentCourse = (new Course())
             ->setCode('python-data-analysis')
+            ->setTitle('Python для анализа данных')
             ->setType(Course::TYPE_RENT)
             ->setPrice(99.9);
 
         $freeCourse = (new Course())
             ->setCode('ux-writing-basics')
+            ->setTitle('Основы UX-редактуры')
             ->setType(Course::TYPE_FREE)
             ->setPrice(null);
 
         $buyCourse = (new Course())
             ->setCode('sql-for-product-managers')
+            ->setTitle('SQL для продакт-менеджеров')
             ->setType(Course::TYPE_BUY)
-            ->setPrice(159.0);
+            ->setPrice(250.);
 
         $secondBuyCourse = (new Course())
             ->setCode('project-management-essentials')
+            ->setTitle('Управление проектами: базовый курс')
             ->setType(Course::TYPE_BUY)
             ->setPrice(199.0);
 

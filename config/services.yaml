@@ -8,6 +8,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.initial_balance: 5000.0
+    app.mailer_from_email: '%env(resolve:MAILER_FROM_EMAIL)%'
+    app.report_email: '%env(resolve:REPORT_EMAIL)%'
 
 services:
     # default configuration for services in *this* file
@@ -35,3 +37,12 @@ services:
     App\DataFixtures\AppFixtures:
         arguments:
             $initialBalance: '%app.initial_balance%'
+
+    App\Command\PaymentEndingNotificationCommand:
+        arguments:
+            $fromEmail: '%app.mailer_from_email%'
+
+    App\Command\PaymentReportCommand:
+        arguments:
+            $fromEmail: '%app.mailer_from_email%'
+            $reportEmail: '%app.report_email%'

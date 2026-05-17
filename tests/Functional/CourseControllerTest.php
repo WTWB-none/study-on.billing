@@ -21,9 +21,11 @@ final class CourseControllerTest extends ApiTestCase
 
         self::assertCount(4, $payload);
         self::assertSame('python-data-analysis', $payload[0]['code']);
+        self::assertSame('Python для анализа данных', $payload[0]['title']);
         self::assertSame('rent', $payload[0]['type']);
         self::assertSame('99.90', $payload[0]['price']);
         self::assertSame('ux-writing-basics', $payload[1]['code']);
+        self::assertSame('Основы UX-редактуры', $payload[1]['title']);
         self::assertSame('free', $payload[1]['type']);
         self::assertArrayNotHasKey('price', $payload[1]);
     }
@@ -40,8 +42,9 @@ final class CourseControllerTest extends ApiTestCase
         $payload = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertSame('sql-for-product-managers', $payload['code']);
+        self::assertSame('SQL для продакт-менеджеров', $payload['title']);
         self::assertSame('buy', $payload['type']);
-        self::assertSame('159.00', $payload['price']);
+        self::assertSame('250.00', $payload['price']);
     }
 
     public function testCoursePayRequiresAuthentication(): void

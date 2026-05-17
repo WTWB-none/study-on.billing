@@ -27,6 +27,7 @@ final class CourseListController
                     items: new OA\Items(
                         properties: [
                             new OA\Property(property: 'code', type: 'string', example: 'python-data-analysis'),
+                            new OA\Property(property: 'title', type: 'string', example: 'Python для анализа данных'),
                             new OA\Property(property: 'type', type: 'string', enum: ['free', 'rent', 'buy'], example: 'rent'),
                             new OA\Property(property: 'price', type: 'string', example: '99.90', nullable: true),
                         ],
@@ -51,6 +52,7 @@ final class CourseListController
     {
         $data = [
             'code' => $course->getCode(),
+            'title' => $course->getTitle(),
             'type' => $course->getTypeName(),
         ];
 
