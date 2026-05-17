@@ -33,11 +33,6 @@ class AppFixtures extends Fixture
         $manager->flush();
 
         foreach ($users as $user) {
-            if ($user->getEmail() === 'user@example.com') {
-                $this->paymentService->deposit($user, 10.0);
-                continue;
-            }
-
             $this->paymentService->deposit($user, $this->initialBalance);
         }
     }
